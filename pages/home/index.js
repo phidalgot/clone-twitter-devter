@@ -17,7 +17,7 @@ export default function HomePage() {
       <AppLayout>
         <div>
           <header className={styles.header}>
-            <h2>Inicio</h2>
+            <h2 className={styles.h2}>Inicio</h2>
           </header>
           <section className={styles.section}>
             {timeline.map(({ id, username, avatar, message }) => (

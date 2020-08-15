@@ -6,24 +6,35 @@ import { colors } from 'styles/theme'
 import Button from 'components/Button'
 import GitHub from 'components/Icons/GitHub'
 import { loginWithGitHub, onAuthStateChanged } from 'firebase/client'
-import Avatar from 'components/Avatar'
+// import Avatar from 'components/Avatar'
 import Logo from 'components/Icons/Logo'
+
+import { useRouter } from 'next/router'
+
 // devit
+
+const USER_STATE = {
+  NO_LOGIADO: null,
+  NO_SABEMOS: undefined,
+}
 
 export default function Home() {
   // const router = useRouter();
   const [user, setUser] = useState(undefined)
+  const router = useRouter()
 
   useEffect(() => {
     onAuthStateChanged(setUser)
   }, [])
 
+  useEffect(() => {
+    user && router.replace('/home')
+  }, [user])
+
   const handleClick = () => {
-    loginWithGitHub()
-      .then(setUser)
-      .catch((err) => {
-        console.log(err)
-      })
+    loginWithGitHub().catch((err) => {
+      console.log(err)
+    })
   }
 
   return (
@@ -35,7 +46,7 @@ export default function Home() {
 
       <AppLayout>
         <section>
-          <Logo width='100'/ > 
+          <Logo width='100' />
           {/* <img src='/devter-logo.png' alt='Logo'></img> */}
           <h1>Devter</h1>
           <h2>
@@ -44,20 +55,14 @@ export default function Home() {
           </h2>
           <div>
             {console.log('usersss', user)}
-            {user === null && (
+            {user === USER_STATE.NO_LOGIADO && (
               <Button onClick={handleClick}>
                 <GitHub fill='#fff' width={24} height={24} /> Login Con GitHub
               </Button>
             )}
-            {user && user.avatar && (
+            {user === USER_STATE.NO_SABEMOS && (
               <div>
-                <Avatar
-                  src={user.avatar}
-                  alt={user.email}
-                  text={user.username}
-                />
-                {/* <img src={user.avatar} />
-                <strong>{user.email}</strong> */}
+                <span>Cargando...</span>
               </div>
             )}
           </div>
